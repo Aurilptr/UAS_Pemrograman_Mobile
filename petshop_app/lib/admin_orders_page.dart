@@ -25,7 +25,7 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> with SingleTickerProv
 
   Future<void> _fetchOrders() async {
     print("[ADMIN] FETCHING: Getting order list from server...");
-    final url = Uri.parse('http://127.0.0.1:5000/admin/orders'); 
+    final url = Uri.parse('http://192.168.101.12:5000/admin/orders'); 
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -48,7 +48,7 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> with SingleTickerProv
   Future<void> _updateStatus(int orderId, String newStatus, {String? reason}) async {
     print("[ADMIN] UPDATE REQUEST: Order $orderId -> $newStatus (Reason: $reason)");
     
-    final url = Uri.parse('http://127.0.0.1:5000/admin/order_status');
+    final url = Uri.parse('http://192.168.101.12:5000/admin/order_status');
     try {
       final Map<String, dynamic> bodyData = {
         'order_id': orderId,
@@ -211,7 +211,7 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> with SingleTickerProv
       itemCount: orders.length,
       itemBuilder: (context, index) {
         final order = orders[index];
-        final String imageUrl = order['product_image'] ?? 'https://via.placeholder.com/100';
+        final String imageUrl = order['product_image'] ?? 'assets/images/placeholder.jpeg';
 
         // --- LOGIKA DETEKSI SIAPA YANG CANCEL ---
         bool cancelledByAdmin = false;
@@ -241,15 +241,20 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> with SingleTickerProv
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
+                      child: Image.asset(
                         imageUrl,
                         width: 80, height: 80, fit: BoxFit.cover,
-                        errorBuilder: (c, o, s) => Container(
-                          width: 80, height: 80, color: Colors.grey[200],
-                          child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                        errorBuilder: (context, error, stackTrace) {
+                            print("Error loading image: $error"); // Ini akan memberitahu kenapa gagal
+                            return Container(
+                              width: 80,
+                              height: 80,
+                              color: Colors.grey[200],
+                              child: const Icon(Icons.image_not_supported, color: Colors.grey),
+                            );
+                          },
                         ),
                       ),
-                    ),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Column(
@@ -396,7 +401,7 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> with SingleTickerProv
                         _updateStatus(order['id'], 'completed');
                       },
                       icon: const Icon(Icons.check, size: 18, color: Colors.green),
-                      label: const Text("Tandai Selesai (Manual)", style: TextStyle(color: Colors.green)),
+                      label: const Text("Tandai Selesai", style: TextStyle(color: Colors.green)),
                       style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.green)),
                     ),
                   ),

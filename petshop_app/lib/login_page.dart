@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() { _isLoading = true; });
 
     // Ganti IP sesuai device kamu (127.0.0.1 untuk Web, 10.0.2.2 untuk Emulator)
-    const String apiUrl = 'http://127.0.0.1:5000/login'; 
+    const String apiUrl = 'http://192.168.101.12:5000/login'; 
 
     try {
       print("[AUTH] CONNECTING TO: $apiUrl");

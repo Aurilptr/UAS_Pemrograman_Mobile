@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'theme.dart';
 import 'payment_page.dart';
 
-const String baseUrl = 'http://127.0.0.1:5000'; 
+const String baseUrl = 'http://192.168.101.12:5000'; 
 
 class CartPage extends StatefulWidget {
   final int userId;
@@ -250,8 +250,8 @@ class _CartPageState extends State<CartPage> {
             borderRadius: BorderRadius.circular(8),
             child: SizedBox(
               width: 70, height: 70,
-              child: Image.network( 
-                item['image_url'] ?? '', 
+              child: Image.asset( 
+                item['image_url'] ?? 'petshop_app/assets/images/placeholder.jpeg',
                 fit: BoxFit.cover,
                 errorBuilder: (ctx, err, stack) => Container(color: Colors.grey[300], child: const Icon(Icons.broken_image)),
               ),

@@ -11,7 +11,7 @@ class AdminProductsPage extends StatefulWidget {
 }
 
 class _AdminProductsPageState extends State<AdminProductsPage> {
-  final String apiUrl = "http://127.0.0.1:5000"; 
+  final String apiUrl = "http://192.168.101.12:5000"; 
   
   List<dynamic> _products = [];
   bool _isLoading = true;
@@ -21,6 +21,59 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
     super.initState();
     print("[ADMIN] INIT: Opening Product Management Page");
     _fetchProducts();
+  }
+
+// --- HELPER UNTUK MENAMPILKAN GAMBAR (SOLUSI UTAMA) ---
+  Widget _buildProductImage(String? imageUrl) {
+    if (imageUrl == null || imageUrl.isEmpty) {
+      return _buildPlaceholder();
+    }
+
+    // Jika image_url berisi path lokal/assets (tidak diawali http)
+    if (!imageUrl.startsWith('http')) {
+      return Image.asset(
+        imageUrl,
+        width: 60,
+        height: 60,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+      );
+    }
+
+    // Jika image_url adalah link internet
+    return Image.network(
+      imageUrl,
+      width: 60,
+      height: 60,
+      fit: BoxFit.cover,
+      // Menangani jika link mati atau 404
+      errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+      // Menangani loading saat gambar didownload
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Container(
+          width: 60,
+          height: 60,
+          color: Colors.grey[100],
+          child: const Center(
+            child: SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      width: 60,
+      height: 60,
+      color: Colors.grey[200],
+      child: const Icon(Icons.image_not_supported, color: Colors.grey),
+    );
   }
 
   // --- 1. FETCH PRODUCTS ---
@@ -220,8 +273,8 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
                     Map<String, dynamic> formData = {
                       "name": nameController.text,
                       "description": descController.text,
-                      "price": int.parse(priceController.text),
-                      "stock": int.parse(stockController.text),
+                      "price": int.tryParse(priceController.text) ?? 0,
+                      "stock": int.tryParse(stockController.text) ?? 0,
                       "category": selectedCategory,
                       "image_url": imageController.text.isEmpty 
                           ? "https://via.placeholder.com/150"
@@ -297,11 +350,7 @@ class _AdminProductsPageState extends State<AdminProductsPage> {
                         contentPadding: const EdgeInsets.all(16),
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            product['image_url'] ?? '',
-                            width: 60, height: 60, fit: BoxFit.cover,
-                            errorBuilder: (c,o,s) => Container(width: 60, height: 60, color: Colors.grey[200], child: const Icon(Icons.image)),
-                          ),
+                          child: _buildProductImage(product['image_url']),
                         ),
                         title: Text(product['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Column(

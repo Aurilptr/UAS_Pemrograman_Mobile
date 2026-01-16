@@ -11,7 +11,7 @@ class AdminUsersPage extends StatefulWidget {
 }
 
 class _AdminUsersPageState extends State<AdminUsersPage> {
-  final String apiUrl = "http://127.0.0.1:5000"; 
+  final String apiUrl = "http://192.168.101.12:5000"; 
   List<dynamic> _users = [];
   bool _isLoading = true;
 

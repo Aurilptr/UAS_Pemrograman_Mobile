@@ -12,7 +12,7 @@ class AdminReportPage extends StatefulWidget {
 }
 
 class _AdminReportPageState extends State<AdminReportPage> {
-  final String apiUrl = "http://127.0.0.1:5000";
+  final String apiUrl = "http://192.168.101.12:5000";
   Map<String, dynamic> _stats = {};
   bool _isLoading = true;
 

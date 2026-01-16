@@ -26,7 +26,7 @@ class _ShopPageState extends State<ShopPage> {
     print("[CLIENT] SHOP: Fetching product list from server...");
 
     try {
-      final response = await http.get(Uri.parse('http://127.0.0.1:5000/products'));
+      final response = await http.get(Uri.parse('http://192.168.101.12:5000/products'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);

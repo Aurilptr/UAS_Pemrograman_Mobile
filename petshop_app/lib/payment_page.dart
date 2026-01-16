@@ -53,7 +53,7 @@ class _PaymentPageState extends State<PaymentPage> {
     });
 
     try {
-      final url = Uri.parse('http://127.0.0.1:5000/checkout');
+      final url = Uri.parse('http://192.168.101.12:5000/checkout');
 
       // 2. Siapkan Data Item agar bersih saat dikirim ke Server
       List<Map<String, dynamic>> itemsToSend = widget.selectedItems.map((item) {

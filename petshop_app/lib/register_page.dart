@@ -23,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     setState(() { _isLoading = true; });
  
-    const String apiUrl = 'http://127.0.0.1:5000/register'; 
+    const String apiUrl = 'http://192.168.101.12:5000/register'; 
 
     try {
       print("[CLIENT] SENDING REQUEST TO: $apiUrl"); 

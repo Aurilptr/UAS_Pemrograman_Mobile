@@ -21,9 +21,9 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
     _fetchOrders();
   }
 
-  // 1. AMBIL DATA PESANAN
+  // 1. AMBIL DATA PESANAN DARI FLASK
   Future<void> _fetchOrders() async {
-    final url = Uri.parse('http://127.0.0.1:5000/my_orders/${widget.userId}');
+    final url = Uri.parse('http://192.168.101.12:5000/my_orders/${widget.userId}');
 
     try {
       final response = await http.get(url);
@@ -45,7 +45,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
 
   // 2. FUNGSI MEMBATALKAN PESANAN
   Future<void> _cancelOrder(int orderId, String reason) async {
-    final url = Uri.parse('http://127.0.0.1:5000/orders/cancel');
+    final url = Uri.parse('http://192.168.101.12:5000/orders/cancel');
 
     try {
       final response = await http.post(
@@ -146,7 +146,6 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                     final order = _orders[index];
                     final items = order['items'] as List;
                     
-                    // Logic Cek Status
                     bool canCancel = order['status'] == 'pending_payment';
                     bool isCancelled = order['status'] == 'cancelled';
                    
@@ -199,13 +198,21 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      item['image'] ?? 'https://via.placeholder.com/60',
-                                      width: 60, height: 60, fit: BoxFit.cover,
-                                      errorBuilder: (c, o, s) => Container(
-                                        width: 60, height: 60, color: Colors.grey[200], 
-                                        child: const Icon(Icons.image_not_supported, size: 20)
-                                      ),
+                                    // PERBAIKAN DI SINI: Menggunakan Image.asset
+                                    child: Image.asset(
+                                      item['image'] ?? 'petshop_app/assets/images/placeholder.jpeg',
+                                      width: 60, 
+                                      height: 60, 
+                                      fit: BoxFit.cover,
+                                      // Jika file tidak ditemukan di folder assets
+                                      errorBuilder: (context, error, stackTrace) {
+                                        return Container(
+                                          width: 60, 
+                                          height: 60, 
+                                          color: Colors.grey[200], 
+                                          child: const Icon(Icons.image_not_supported, size: 20, color: Colors.grey)
+                                        );
+                                      },
                                     ),
                                   ),
                                   const SizedBox(width: 12),
@@ -249,7 +256,6 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                                 ],
                               ),
                               
-                              // TOMBOL BATALKAN
                               if (canCancel)
                                 ElevatedButton(
                                   onPressed: () => _showCancelDialog(order['id']),
@@ -267,7 +273,7 @@ class _MyOrdersPageState extends State<MyOrdersPage> {
                             ],
                           ),
 
-                          // --- SECTION KHUSUS ALASAN PEMBATALAN ---
+                          // --- INFO ALASAN CANCEL ---
                           if (isCancelled) ...[
                              const SizedBox(height: 16),
                              Container(

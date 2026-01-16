@@ -31,7 +31,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> _updateProfile() async {
     setState(() => _isLoading = true);
 
-    final url = Uri.parse('http://127.0.0.1:5000/update_profile/${widget.userId}');
+    final url = Uri.parse('http://192.168.101.12:5000/update_profile/${widget.userId}');
     
     try {
       final response = await http.put(

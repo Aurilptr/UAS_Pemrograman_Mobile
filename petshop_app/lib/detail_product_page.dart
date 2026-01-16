@@ -76,7 +76,7 @@ class _DetailProductPageState extends State<DetailProductPage> {
     );
 
     try {
-      final url = Uri.parse('http://127.0.0.1:5000/cart'); 
+      final url = Uri.parse('http://192.168.101.12:5000/cart'); 
       
       print("[CLIENT] SENDING TO SERVER... UserID: $userId");
       
