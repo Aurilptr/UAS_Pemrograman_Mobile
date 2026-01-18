@@ -96,6 +96,3 @@ Project ini dibuat untuk keperluan akademik dan masih dapat dikembangkan lebih l
 - Integrasi *payment gateway*
 - Penambahan notifikasi *real-time*
 - Peningkatan keamanan sistem
-- Pengembangan versi iOS
-
----
